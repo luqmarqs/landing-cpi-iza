@@ -25,7 +25,7 @@ const landingConfig = {
   // ===== SEÇÃO 1: CONTEXTO (PROBLEMA) =====
   contextSection: {
     title: "POR QUE A CPI É NECESSÁRIA?",
-    text: "A crise da educação em Belo Horizonte não é acidental. É resultado de decisões, falta de prioridade e falta de transparência.\n\nNos últimos 5 anos vivemos uma verdadeira desorganização: gestões instáveis, contratos sob suspeita, professores faltando.\n\nA CPI é essencial para trazer luz a tudo isso e defender o direito fundamental dos nossos filhos.",
+    text: "A crise da educação em Belo Horizonte não é acidental. É resultado de decisões, falta de prioridade e falta de transparência.\n\nNos últimos 5 anos vivemos uma verdadeira desorganização: gestões instáveis, contratos sob suspeita e professores faltando.\n\nA CPI é essencial para trazer luz a tudo isso e defender o direito fundamental dos nossos filhos.",
   },
 
   // ===== SEÇÃO 2: 5 MOTIVOS (BLOCOS VISUAIS) =====
@@ -46,7 +46,7 @@ const landingConfig = {
     {
       icon: "3️⃣",
       title: "FALTA DE PROFESSORES E PRECARIZAÇÃO",
-      text: "Mesmo com concurso vigente, faltam professores em várias escolas. Isso tem causado:\n\n• Sobrecarga e adoecimento de professores\n• Diretores assumindo sala de aula\n• Falta de coordenação pedagógica\n• Ausência de aulas de português e matemática\n\ndentre outras.\n\nÉ preciso apurar quem é o responsável por essa situação e se não há uma intenção a médio prazo de levar as escolas ao limite e criar uma situação que justifique perante a opinião pública a alteração da lei orgânica para permitir contratos precários e com isso \"resolver\" a crise.\n\nQuem paga essa conta são os estudantes e os trabalhadores da educação.",
+      text: "Mesmo com concurso vigente, faltam professores em várias escolas. Isso tem causado:\n\n• Sobrecarga e adoecimento de professores\n• Diretores assumindo sala de aula\n• Falta de coordenação pedagógica\n• Ausência de aulas de português e matemática, dentre outras.\n\nÉ preciso apurar quem é o responsável por essa situação e se não há uma intenção a médio prazo de levar as escolas ao limite e criar uma situação que justifique perante a opinião pública a alteração da lei orgânica para permitir contratos precários e com isso \"resolver\" a crise.\n\nQuem paga essa conta são os estudantes e os trabalhadores da educação.",
     },
     {
       icon: "4️⃣",

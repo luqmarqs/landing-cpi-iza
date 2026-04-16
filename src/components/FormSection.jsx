@@ -7,6 +7,31 @@ import landingConfig from '../config/landingConfig'
 const normalizar = (texto) =>
   texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+const formatDateInput = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 8)
+  if (digits.length <= 2) return digits
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+}
+
+const validarData = (display) => {
+  if (display.length < 10) return false
+  const [d, m, y] = display.split('/').map(Number)
+  if (!d || !m || !y || y < 1900) return false
+  const date = new Date(y, m - 1, d)
+  return (
+    date.getDate() === d &&
+    date.getMonth() === m - 1 &&
+    date.getFullYear() === y &&
+    date <= new Date()
+  )
+}
+
+const toISODate = (display) => {
+  const [d, m, y] = display.split('/')
+  return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+}
+
 function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy }) {
   const [form, setForm] = useState({
     nome: '',
@@ -19,6 +44,8 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
   })
 
   const [telefoneErro, setTelefoneErro] = useState('')
+  const [dataErro, setDataErro] = useState('')
+  const [nascimentoDisplay, setNascimentoDisplay] = useState('')
   const [emailErro, setEmailErro] = useState('')
   const [cidadeErro, setCidadeErro] = useState('')
   const [lgpdErro, setLgpdErro] = useState('')
@@ -184,9 +211,11 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
 
       // Reset apenas em caso de sucesso real
       setForm({ nome: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: false })
+      setNascimentoDisplay('')
       setCidadeBusca('')
       setCidadesFiltradas([])
       setTelefoneErro('')
+      setDataErro('')
       setEmailErro('')
       setCidadeErro('')
       setLgpdErro('')
@@ -200,8 +229,6 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
       setIsSubmitting(false)
     }
   }
-
-  const today = new Date().toISOString().split('T')[0]
 
   return (
     <>
@@ -225,14 +252,31 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
               </label>
 
               <input
-                type="date"
+                type="text"
                 name="nascimento"
-                value={form.nascimento}
-                max={today}
-                min="1900-01-01"
-                onChange={(event) => setForm({ ...form, nascimento: event.target.value })}
+                placeholder="DD/MM/AAAA"
+                value={nascimentoDisplay}
+                inputMode="numeric"
+                maxLength={10}
+                onChange={(event) => {
+                  const formatted = formatDateInput(event.target.value)
+                  setNascimentoDisplay(formatted)
+                  if (formatted.length === 10) {
+                    if (validarData(formatted)) {
+                      setForm({ ...form, nascimento: toISODate(formatted) })
+                      setDataErro('')
+                    } else {
+                      setForm({ ...form, nascimento: '' })
+                      setDataErro('Data inválida')
+                    }
+                  } else {
+                    setForm({ ...form, nascimento: '' })
+                    setDataErro('')
+                  }
+                }}
                 required
               />
+              {dataErro && <p className="field-error">{dataErro}</p>}
 
               <input
                 name="whatsapp"
