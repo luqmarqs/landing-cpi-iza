@@ -210,7 +210,7 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
       await submitFormData(formIntegration, form)
 
       // Reset apenas em caso de sucesso real
-      setForm({ nome: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: false })
+      setForm({ nome: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: true })
       setNascimentoDisplay('')
       setCidadeBusca('')
       setCidadesFiltradas([])
