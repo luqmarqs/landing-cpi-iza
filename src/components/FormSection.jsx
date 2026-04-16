@@ -40,7 +40,7 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
     email: '',
     uf: '',
     cidade: '',
-    lgpd: false,
+    lgpd: true,
   })
 
   const [telefoneErro, setTelefoneErro] = useState('')
