@@ -197,8 +197,8 @@ const landingConfig = {
   // ===== ANALYTICS =====
   analytics: {
     googleAnalytics: {
-      enabled: false,
-      measurementId: '',
+      enabled: true,
+      measurementId: 'G-DZF77VG3G5',
     },
     metaPixel: {
       enabled: false,
