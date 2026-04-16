@@ -63,20 +63,20 @@ const landingConfig = {
   // ===== SEÇÃO 3: REFORÇO =====
   reinforcementSection: {
     title: "⚠️ A CPI É NECESSÁRIA",
-    text: "Não é sobre disputa política. É sobre exigir respostas.\n\nA CPI vai investigar irregularidades, restaurar transparência e defender a educação pública de Belo Horizonte.",
+    text: "A CPI não é sobre disputa política — é sobre:",
     highlights: [
-      "✔ Investigar os contratos obscuros",
-      "✔ Explicar o desaparecimento de recursos",
-      "✔ Proteger professores e trabalhadores",
-      "✔ Garantir aulas para todos",
-      "✔ Defender o direito fundamental à educação",
+      "✔ garantir transparência",
+      "✔ investigar irregularidades",
+      "✔ defender a educação pública",
+      "✔ proteger trabalhadores",
+      "✔ assegurar o direito dos estudantes",
     ],
   },
 
   // ===== SEÇÃO 4: CTA ANTES DO FORMULÁRIO =====
   ctaSection: {
     title: "✊ EDUCAÇÃO NÃO É NEGÓCIO. É DIREITO.",
-    text: "Não queremos apagão: CPI da Educação!\n\nBelo Horizonte precisa de respostas. E a CPI é o primeiro passo.\n\nAssine o abaixo-assinado e demonstre que a população apoia essa investigação fundamental.",
+    text: "Belo Horizonte precisa de respostas.\n\nE a CPI é o primeiro passo.",
     buttonText: "ASSINAR AGORA",
   },
 
