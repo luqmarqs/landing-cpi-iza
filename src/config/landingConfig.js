@@ -9,7 +9,7 @@ const landingConfig = {
   heroImageMobile: "/images/hermann-books-5937716.webp",
 
   // ===== HERO SECTION =====
-  heroTitle: "5 MOTIVOS PARA APOIAR A CPI DO 'APAGÃO DA EDUCAÇÃO' EM BELO HORIZONTE",
+  heroTitle: "Não queremos apagão: CPI da Educação!",
   heroSubtitle:
     "Não queremos apagão: CPI da Educação!\n\nA educação pública de Belo Horizonte vive uma crise profunda. O que deveria ser prioridade virou sinônimo de desorganização, precarização e abandono.\n\nUma Comissão Parlamentar de Inquérito (CPI) é fundamental para investigar irregularidades e trazer transparência.",
 
