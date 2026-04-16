@@ -76,7 +76,7 @@ const landingConfig = {
   // ===== SEÇÃO 4: CTA ANTES DO FORMULÁRIO =====
   ctaSection: {
     title: "✊ EDUCAÇÃO NÃO É NEGÓCIO. É DIREITO.",
-    text: "Belo Horizonte precisa de respostas.\n\nE a CPI é o primeiro passo.",
+    text: "Belo Horizonte precisa de respostas.\n\nE a CPI é o primeiro passo.\n\nAssine o abaixo-assinado e demonstre que a população apoia essa iniciativa.",
     buttonText: "ASSINAR AGORA",
   },
 
