@@ -11,7 +11,7 @@ const landingConfig = {
   // ===== HERO SECTION =====
   heroTitle: "Não queremos apagão: CPI da Educação!",
   heroSubtitle:
-    "Não queremos apagão: CPI da Educação!\n\nA educação pública de Belo Horizonte vive uma crise profunda. O que deveria ser prioridade virou sinônimo de desorganização, precarização e abandono.\n\nUma Comissão Parlamentar de Inquérito (CPI) é fundamental para investigar irregularidades e trazer transparência.",
+    "A educação pública de Belo Horizonte vive uma crise profunda. O que deveria ser prioridade virou sinônimo de desorganização, precarização e abandono.\n\nUma Comissão Parlamentar de Inquérito (CPI) é fundamental para investigar irregularidades e trazer transparência.",
 
   // ===== CONTADOR =====
   counterLabel: "pessoas ja assinaram",
