@@ -463,9 +463,18 @@ button.privacy-link {
 
 .reasons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 2.5rem;
 }
+
+/* Cada card ocupa 2 colunas → 3 por linha */
+.reason-card {
+  grid-column: span 2;
+}
+
+/* Últimos 2: deslocados 1 coluna para centralizar na grade de 6 */
+.reason-card:nth-child(4) { grid-column: 2 / span 2; }
+.reason-card:nth-child(5) { grid-column: 4 / span 2; }
 
 .reason-card {
   padding: 2.5rem;
@@ -525,11 +534,15 @@ button.privacy-link {
 
 .highlights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 1.5rem;
   max-width: 1000px;
   margin: 0 auto;
 }
+
+.highlight-item { grid-column: span 2; }
+.highlight-item:nth-child(4) { grid-column: 2 / span 2; }
+.highlight-item:nth-child(5) { grid-column: 4 / span 2; }
 
 .highlight-item {
   padding: 1.5rem;
@@ -636,6 +649,7 @@ button.privacy-link {
   display: grid;
   gap: 1rem;
   text-align: center;
+  justify-items: center;
 }
 
 .footer-content p {
@@ -831,6 +845,15 @@ button.privacy-link {
   .reasons-grid,
   .highlights {
     grid-template-columns: 1fr;
+  }
+
+  .reason-card,
+  .reason-card:nth-child(4),
+  .reason-card:nth-child(5),
+  .highlight-item,
+  .highlight-item:nth-child(4),
+  .highlight-item:nth-child(5) {
+    grid-column: 1 / -1;
   }
 
   .form-card {

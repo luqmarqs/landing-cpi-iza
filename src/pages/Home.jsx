@@ -63,10 +63,12 @@ function Home() {
   }
 
   const shareWhatsApp = () => {
-    const url = encodeURIComponent(window.location.href)
-    const text = encodeURIComponent(landingConfig.whatsappText)
-
-    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank')
+    const fullText = `${landingConfig.whatsappText}\n${window.location.href}`
+    window.open(
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(fullText)}`,
+      '_blank',
+      'noopener,noreferrer',
+    )
   }
 
   return (

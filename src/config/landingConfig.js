@@ -25,7 +25,7 @@ const landingConfig = {
   // ===== SEÇÃO 1: CONTEXTO (PROBLEMA) =====
   contextSection: {
     title: "POR QUE A CPI É NECESSÁRIA?",
-    text: "A crise da educação em Belo Horizonte não é acidental. É resultado de decisões, falta de prioridade e falta de transparência.\n\nNos últimos 5 anos vivemos uma verdadeira desorganização: gestões instáveis, contratos sob suspeita, professores faltando, dinheiro desaparecendo e ninguém prestando contas.\n\nA CPI é essencial para trazer luz a tudo isso e defender o direito fundamental dos nossos filhos.",
+    text: "A crise da educação em Belo Horizonte não é acidental. É resultado de decisões, falta de prioridade e falta de transparência.\n\nNos últimos 5 anos vivemos uma verdadeira desorganização: gestões instáveis, contratos sob suspeita, professores faltando.\n\nA CPI é essencial para trazer luz a tudo isso e defender o direito fundamental dos nossos filhos.",
   },
 
   // ===== SEÇÃO 2: 5 MOTIVOS (BLOCOS VISUAIS) =====
@@ -46,7 +46,7 @@ const landingConfig = {
     {
       icon: "3️⃣",
       title: "FALTA DE PROFESSORES E PRECARIZAÇÃO",
-      text: "Mesmo com concurso vigente, faltam professores em várias escolas. Isso tem causado:\n\n• Sobrecarga e adoecimento de professores\n• Diretores assumindo sala de aula\n• Falta de coordenação pedagógica\n• Ausência de aulas de português e matemática\n\nQuem paga essa conta são os estudantes e os trabalhadores da educação.",
+      text: "Mesmo com concurso vigente, faltam professores em várias escolas. Isso tem causado:\n\n• Sobrecarga e adoecimento de professores\n• Diretores assumindo sala de aula\n• Falta de coordenação pedagógica\n• Ausência de aulas de português e matemática\n\ndentre outras.\n\nÉ preciso apurar quem é o responsável por essa situação e se não há uma intenção a médio prazo de levar as escolas ao limite e criar uma situação que justifique perante a opinião pública a alteração da lei orgânica para permitir contratos precários e com isso \"resolver\" a crise.\n\nQuem paga essa conta são os estudantes e os trabalhadores da educação.",
     },
     {
       icon: "4️⃣",
@@ -131,8 +131,8 @@ const landingConfig = {
 
   // ===== FOOTER =====
   footer: {
-    logo: "/images/footer-logo.webp",
-    text: "Não queremos apagão: CPI da Educação!\n\nNão é sobre disputa política. É sobre transparência, investigação de irregularidades, proteção de trabalhadores e o direito fundamental à educação.",
+    logo: "/images/LOGO-SIMPLES-AMARELO.png",
+    text: "Essa iniciativa é do mandato da vereadora Iza Lourença, comprometida com a transparência, a investigação de irregularidades e a defesa da educação pública de Belo Horizonte.",
     instagram: "https://www.instagram.com/izalourenca/",
     instagramLabel: '@izalourenca',
     privacyLinkText: 'Politica de privacidade',
@@ -156,22 +156,22 @@ const landingConfig = {
   formIntegration: {
     provider: 'google-forms',
     endpoint:
-      'https://docs.google.com/forms/d/e/1FAIpQLScn46xJuZuka4P4UnEQjKhQuz3r1vPCoTa06XtuhbMTkiPhhw/formResponse',
+      'https://docs.google.com/forms/u/0/d/e/1FAIpQLScCdCW0e44KqsIdpgH569tKbNeQuGp0gaUP3uicjS9JmhgpyA/formResponse',
     googleForms: {
       fieldIds: {
-        nome: 'entry.841108454',
+        nome: 'entry.444893001',
         nascimento: {
-          year: 'entry.2078748064_year',
-          month: 'entry.2078748064_month',
-          day: 'entry.2078748064_day',
+          year: 'entry.315384187_year',
+          month: 'entry.315384187_month',
+          day: 'entry.315384187_day',
         },
-        whatsapp: 'entry.1963593262',
-        email: 'entry.1835698599',
-        uf: 'entry.1397297655',
-        cidade: 'entry.1434357970',
-        lgpd: 'entry.1477377412',
+        whatsapp: 'entry.850934725',
+        email: 'entry.1120520517',
+        uf: 'entry.420560265',
+        cidade: 'entry.296241263',
+        lgpd: 'entry.2102880556',
       },
-      lgpdAcceptedValue: 'Aceito politica de privacidade',
+      lgpdAcceptedValue: 'aceito',
     },
     jsonApi: {
       method: 'POST',
