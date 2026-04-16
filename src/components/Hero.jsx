@@ -7,6 +7,9 @@ function Hero({
   onSignClick,
   onShare,
   backgroundColor,
+  counterLabel,
+  ctaButtonText,
+  whatsappButtonText,
 }) {
   return (
     <section className="hero" aria-label="Hero da campanha" style={{ backgroundColor }}>
@@ -21,9 +24,9 @@ function Hero({
           <p className="subtitle">{heroSubtitle}</p>
 
           <div className="hero-actions">
-            <p className="counter">
-              <strong>{signaturesCount.toLocaleString('pt-BR')} pessoas ja assinaram</strong>
-            </p>
+            <div className="counter">
+              <strong>{signaturesCount.toLocaleString('pt-BR')} {counterLabel}</strong>
+            </div>
 
             <a
               href="#assinar"
@@ -33,11 +36,11 @@ function Hero({
                 onSignClick()
               }}
             >
-              Assine ja!
+              {ctaButtonText}
             </a>
 
             <button type="button" className="cta whatsapp glow" onClick={onShare}>
-              Compartilhar no WhatsApp
+              {whatsappButtonText}
             </button>
           </div>
         </div>

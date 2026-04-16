@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import Fuse from 'fuse.js'
-import cidadesBR from '../data/cidadesBR.json'
 import { submitFormData } from '../utils/formSubmission'
+import landingConfig from '../config/landingConfig'
+
+// Fora do componente — criada uma única vez, não em cada render
+const normalizar = (texto) =>
+  texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy }) {
   const [form, setForm] = useState({
@@ -17,51 +21,94 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
   const [telefoneErro, setTelefoneErro] = useState('')
   const [emailErro, setEmailErro] = useState('')
   const [cidadeErro, setCidadeErro] = useState('')
+  const [lgpdErro, setLgpdErro] = useState('')
+  const [submitErro, setSubmitErro] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const [cidadeBusca, setCidadeBusca] = useState('')
   const [cidadesFiltradas, setCidadesFiltradas] = useState([])
   const [fuse, setFuse] = useState(null)
+
   const [ufs, setUfs] = useState([])
+  const [ufsErro, setUfsErro] = useState(false)
+
   const [cidades, setCidades] = useState([])
+  const [cidadesCarregando, setCidadesCarregando] = useState(false)
+  const [cidadesErro, setCidadesErro] = useState(false)
 
-  const normalizar = (texto) =>
-    texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-
+  // Carrega estados via IBGE com timeout
   useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+
+    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome', {
+      signal: controller.signal,
+    })
       .then((res) => res.json())
       .then((data) => setUfs(data))
+      .catch((err) => {
+        if (err.name !== 'AbortError') setUfsErro(true)
+      })
+      .finally(() => clearTimeout(timeout))
+
+    return () => {
+      clearTimeout(timeout)
+      controller.abort()
+    }
   }, [])
 
+  // Carrega cidades via IBGE quando UF muda — com reset, timeout e feedback de erro
   useEffect(() => {
     setCidadeBusca('')
     setCidadesFiltradas([])
     setCidadeErro('')
-    setForm((currentForm) => ({ ...currentForm, cidade: '' }))
-  }, [form.uf])
+    setCidades([])
+    setFuse(null)
+    setCidadesErro(false)
+    setForm((f) => ({ ...f, cidade: '' }))
 
-  useEffect(() => {
-    if (!form.uf) {
-      setCidades([])
-      setFuse(null)
-      return
-    }
+    if (!form.uf) return
 
-    const cidadesFiltradasUF = cidadesBR.filter((cidade) => cidade.uf === form.uf)
-    const cidadesPreparadas = cidadesFiltradasUF.map((cidade) => ({
-      ...cidade,
-      nomeBusca: normalizar(cidade.nome),
-    }))
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+    setCidadesCarregando(true)
 
-    setCidades(cidadesPreparadas)
-    setFuse(
-      new Fuse(cidadesPreparadas, {
-        keys: ['nomeBusca'],
-        threshold: 0.3,
-        ignoreLocation: true,
-      }),
+    fetch(
+      `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${form.uf}/municipios?orderBy=nome`,
+      { signal: controller.signal },
     )
+      .then((res) => res.json())
+      .then((data) => {
+        const preparadas = data.map((c) => ({
+          id: c.id,
+          nome: c.nome,
+          uf: form.uf,
+          nomeBusca: normalizar(c.nome),
+        }))
+        setCidades(preparadas)
+        setFuse(
+          new Fuse(preparadas, {
+            keys: ['nomeBusca'],
+            threshold: 0.3,
+            ignoreLocation: true,
+          }),
+        )
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') setCidadesErro(true)
+      })
+      .finally(() => {
+        clearTimeout(timeout)
+        setCidadesCarregando(false)
+      })
+
+    return () => {
+      clearTimeout(timeout)
+      controller.abort()
+    }
   }, [form.uf])
 
+  // Filtra cidades com Fuse conforme busca
   useEffect(() => {
     if (!fuse || cidadeBusca.length < 2) {
       setCidadesFiltradas([])
@@ -81,33 +128,25 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
 
   const formatPhone = (value) => {
     const digits = value.replace(/\D/g, '').slice(0, 11)
-
     if (digits.length <= 2) return digits
     if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
     if (digits.length <= 10) {
       return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
     }
-
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
   }
 
   const validarTelefoneBR = (telefone) => {
     const numero = telefone.replace(/\D/g, '')
-
     if (numero.length !== 10 && numero.length !== 11) return false
     if (/^(\d)\1+$/.test(numero)) return false
-
     const ddd = parseInt(numero.substring(0, 2), 10)
-
     if (ddd < 11 || ddd > 99) return false
     if (numero.length === 11 && numero[2] !== '9') return false
-
     if (numero.length === 10) {
       const primeiro = parseInt(numero[2], 10)
-
       if (primeiro < 2 || primeiro > 5) return false
     }
-
     return true
   }
 
@@ -115,89 +154,89 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
 
   const validarCidade = (cidade) => {
     if (!cidade) return false
-
     const termo = normalizar(cidade)
     return cidades.some((item) => normalizar(item.nome) === termo)
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (isSubmitting) return
 
+    // Validações inline — sem window.alert
     if (!validarTelefoneBR(form.whatsapp)) {
-      window.alert('Telefone invalido')
+      setTelefoneErro(landingConfig.formValidation.telefoneInvalido)
       return
     }
-
     if (!validarCidade(form.cidade)) {
-      window.alert('Selecione uma cidade valida.')
+      setCidadeErro(landingConfig.formValidation.cidadeInvalida)
       return
     }
-
     if (!form.lgpd) {
-      window.alert('Voce precisa aceitar a politica de privacidade.')
+      setLgpdErro(landingConfig.formValidation.lgpdRequired)
       return
     }
 
-    await submitFormData(formIntegration, form)
+    setIsSubmitting(true)
+    setSubmitErro('')
 
-    setForm({
-      nome: '',
-      nascimento: '',
-      whatsapp: '',
-      email: '',
-      uf: '',
-      cidade: '',
-      lgpd: false,
-    })
-    setCidadeBusca('')
-    setCidadesFiltradas([])
-    setTelefoneErro('')
-    setEmailErro('')
-    setCidadeErro('')
+    try {
+      await submitFormData(formIntegration, form)
 
-    if (
-      window.confirm(
-        'Assinatura registrada com sucesso!\n\nDeseja compartilhar este abaixo-assinado no WhatsApp?',
-      )
-    ) {
-      onShare()
+      // Reset apenas em caso de sucesso real
+      setForm({ nome: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: false })
+      setCidadeBusca('')
+      setCidadesFiltradas([])
+      setTelefoneErro('')
+      setEmailErro('')
+      setCidadeErro('')
+      setLgpdErro('')
+
+      if (window.confirm(landingConfig.formSection.successMessage)) {
+        onShare()
+      }
+    } catch {
+      setSubmitErro('Erro ao enviar. Verifique sua conexão e tente novamente.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
+
+  const today = new Date().toISOString().split('T')[0]
 
   return (
     <>
       <section id="assinar" className="form-section">
         <div className="container">
           <div className="form-card">
-            <h2>Junte-se a esse movimento</h2>
+            <h2>{landingConfig.formSection.title}</h2>
 
             <form onSubmit={handleSubmit}>
               <input
                 name="nome"
-                placeholder="Nome completo"
+                placeholder={landingConfig.formFields.nome.placeholder}
                 value={form.nome}
                 onChange={(event) => setForm({ ...form, nome: event.target.value })}
                 required
               />
 
               <label className="date-label">
-                <span className="date-icon">📅</span>
-                Data de nascimento
+                <span className="date-icon">{landingConfig.formFields.nascimento.icon}</span>
+                {landingConfig.formFields.nascimento.label}
               </label>
 
               <input
                 type="date"
                 name="nascimento"
                 value={form.nascimento}
-                onChange={(event) =>
-                  setForm({ ...form, nascimento: event.target.value })
-                }
+                max={today}
+                min="1900-01-01"
+                onChange={(event) => setForm({ ...form, nascimento: event.target.value })}
                 required
               />
 
               <input
                 name="whatsapp"
-                placeholder="WhatsApp"
+                placeholder={landingConfig.formFields.whatsapp.placeholder}
                 value={form.whatsapp}
                 inputMode="numeric"
                 autoComplete="tel"
@@ -208,49 +247,38 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
                   setForm({ ...form, whatsapp: masked })
 
                   if (numero.length > 0 && numero.length < 10) {
-                    setTelefoneErro('Telefone incompleto')
+                    setTelefoneErro(landingConfig.formValidation.telefoneIncompleto)
                     return
                   }
-
                   if (numero.length === 10 || numero.length === 11) {
-                    if (!validarTelefoneBR(masked)) {
-                      setTelefoneErro('Telefone invalido')
-                    } else {
-                      setTelefoneErro('')
-                    }
+                    setTelefoneErro(
+                      validarTelefoneBR(masked) ? '' : landingConfig.formValidation.telefoneInvalido,
+                    )
                   } else {
                     setTelefoneErro('')
                   }
                 }}
                 required
               />
-
               {telefoneErro && <p className="field-error">{telefoneErro}</p>}
 
               <input
                 type="email"
                 name="email"
-                placeholder="E-mail"
+                placeholder={landingConfig.formFields.email.placeholder}
                 value={form.email}
                 autoComplete="email"
-                onInput={(event) => {
+                onChange={(event) => {
                   const value = event.target.value
-
                   setForm({ ...form, email: value })
-
                   if (value.length > 3) {
-                    if (!validarEmail(value)) {
-                      setEmailErro('E-mail invalido')
-                    } else {
-                      setEmailErro('')
-                    }
+                    setEmailErro(validarEmail(value) ? '' : landingConfig.formValidation.emailInvalido)
                   } else {
                     setEmailErro('')
                   }
                 }}
                 required
               />
-
               {emailErro && <p className="field-error">{emailErro}</p>}
 
               <select
@@ -258,25 +286,35 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
                 onChange={(event) => setForm({ ...form, uf: event.target.value })}
                 required
               >
-                <option value="">Estado</option>
-
+                <option value="">{landingConfig.formFields.uf.placeholder}</option>
                 {ufs.map((uf) => (
                   <option key={uf.id} value={uf.sigla}>
                     {uf.nome}
                   </option>
                 ))}
               </select>
+              {ufsErro && (
+                <p className="field-error">
+                  Não foi possível carregar os estados. Recarregue a página.
+                </p>
+              )}
 
               <div className="cidade-field">
                 <input
-                  placeholder="Cidade"
+                  placeholder={
+                    cidadesCarregando
+                      ? 'Carregando cidades...'
+                      : !form.uf
+                        ? 'Selecione um estado primeiro'
+                        : landingConfig.formFields.cidade.placeholder
+                  }
                   value={cidadeBusca}
                   autoComplete="off"
+                  disabled={!form.uf || cidadesCarregando}
                   onClick={(event) => event.stopPropagation()}
                   onBlur={() => setTimeout(() => setCidadesFiltradas([]), 150)}
                   onChange={(event) => {
                     const value = event.target.value
-
                     setCidadeBusca(value)
                     setForm({ ...form, cidade: value })
 
@@ -284,26 +322,24 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
                       const existe = cidades.some(
                         (cidade) => normalizar(cidade.nome) === normalizar(value),
                       )
-
-                      if (!existe) {
-                        setCidadeErro('Selecione uma cidade valida')
-                      } else {
-                        setCidadeErro('')
-                        setCidadesFiltradas([])
-                      }
+                      setCidadeErro(existe ? '' : landingConfig.formValidation.cidadeInvalida)
+                      if (existe) setCidadesFiltradas([])
                     } else {
                       setCidadeErro('')
                     }
                   }}
                   onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      setCidadesFiltradas([])
-                    }
+                    if (event.key === 'Enter') setCidadesFiltradas([])
                   }}
                   required
                 />
 
                 {cidadeErro && <p className="field-error">{cidadeErro}</p>}
+                {cidadesErro && (
+                  <p className="field-error">
+                    Não foi possível carregar as cidades. Tente novamente.
+                  </p>
+                )}
 
                 {cidadesFiltradas.length > 0 && (
                   <div
@@ -333,27 +369,28 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
                   type="checkbox"
                   name="lgpd"
                   checked={form.lgpd}
-                  onChange={(event) => setForm({ ...form, lgpd: event.target.checked })}
+                  onChange={(event) => {
+                    setForm({ ...form, lgpd: event.target.checked })
+                    if (event.target.checked) setLgpdErro('')
+                  }}
                 />
-
                 <span>
                   {formCheckboxText}{' '}
-                  <span className="privacy-link" onClick={onOpenPrivacy}>
-                    politica de privacidade
-                  </span>
+                  <button type="button" className="privacy-link" onClick={onOpenPrivacy}>
+                    {landingConfig.formCheckboxLinkText}
+                  </button>
                 </span>
               </label>
+              {lgpdErro && <p className="field-error">{lgpdErro}</p>}
 
-              <button type="submit" className="glow form-submit">
-                Assine
+              {submitErro && <p className="field-error">{submitErro}</p>}
+
+              <button type="submit" className="glow form-submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Enviando...' : landingConfig.formSection.ctaButtonText}
               </button>
 
-              <button
-                type="button"
-                className="whatsapp-share glow"
-                onClick={onShare}
-              >
-                Compartilhar no WhatsApp
+              <button type="button" className="whatsapp-share glow" onClick={onShare}>
+                {landingConfig.formSection.whatsappButtonText}
               </button>
             </form>
           </div>
