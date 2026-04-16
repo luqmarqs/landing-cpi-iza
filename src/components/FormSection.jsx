@@ -35,6 +35,7 @@ const toISODate = (display) => {
 function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy }) {
   const [form, setForm] = useState({
     nome: '',
+    rg: '',
     nascimento: '',
     whatsapp: '',
     email: '',
@@ -210,7 +211,7 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
       await submitFormData(formIntegration, form)
 
       // Reset apenas em caso de sucesso real
-      setForm({ nome: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: true })
+      setForm({ nome: '', rg: '', nascimento: '', whatsapp: '', email: '', uf: '', cidade: '', lgpd: true })
       setNascimentoDisplay('')
       setCidadeBusca('')
       setCidadesFiltradas([])
@@ -244,6 +245,13 @@ function FormSection({ formIntegration, formCheckboxText, onShare, onOpenPrivacy
                 value={form.nome}
                 onChange={(event) => setForm({ ...form, nome: event.target.value })}
                 required
+              />
+
+              <input
+                name="rg"
+                placeholder={landingConfig.formFields.rg.placeholder}
+                value={form.rg}
+                onChange={(event) => setForm({ ...form, rg: event.target.value })}
               />
 
               <label className="date-label">

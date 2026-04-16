@@ -94,6 +94,10 @@ const landingConfig = {
       placeholder: "Seu nome completo",
       label: "Nome",
     },
+    rg: {
+      placeholder: "RG",
+      label: "RG",
+    },
     nascimento: {
       label: "Data de nascimento*",
       icon: "📅",
@@ -144,7 +148,7 @@ const landingConfig = {
 
   // ===== CONTATO FLUTUANTE WHATSAPP =====
   whatsappContact: {
-    number: '5531900000000', // formato: código país + DDD + número, sem espaços ou traços
+    number: '5531993246781', // formato: código país + DDD + número, sem espaços ou traços
     message: 'Olá! Vim pelo site da CPI da Educação e gostaria de entrar em contato.',
   },
 
@@ -160,6 +164,7 @@ const landingConfig = {
     googleForms: {
       fieldIds: {
         nome: 'entry.444893001',
+        rg: 'entry.1282772015',
         nascimento: {
           year: 'entry.315384187_year',
           month: 'entry.315384187_month',

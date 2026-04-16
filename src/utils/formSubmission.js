@@ -11,6 +11,7 @@ async function submitToGoogleForms(endpoint, googleFormsConfig, formValues) {
   const [year = '', month = '', day = ''] = (formValues.nascimento || '').split('-')
 
   if (fieldIds.nome) data.append(fieldIds.nome, formValues.nome)
+  if (fieldIds.rg) data.append(fieldIds.rg, formValues.rg)
   if (fieldIds.nascimento?.year) data.append(fieldIds.nascimento.year, year)
   if (fieldIds.nascimento?.month) data.append(fieldIds.nascimento.month, month)
   if (fieldIds.nascimento?.day) data.append(fieldIds.nascimento.day, day)
