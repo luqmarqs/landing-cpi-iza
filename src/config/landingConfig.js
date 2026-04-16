@@ -192,7 +192,7 @@ const landingConfig = {
 
   // ===== COUNTER API =====
   counterReferenceUrl:
-    "https://script.google.com/macros/s/AKfycbz-bf8QgHbKJwUa9nYXvcWDjvuuVfGNvy_1AvZRnpvmneSfj9RT5XvS-C4T0wh4-xbc/exec",
+    "https://script.google.com/macros/s/AKfycbxfjMhyMbui54QcOoe-3UZS_ErlPpxfTb4o3sVodeTSDyGCaHzGmmnt5FDpVAgyLsEe/exec",
 
   // ===== ANALYTICS =====
   analytics: {
