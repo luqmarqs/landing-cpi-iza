@@ -7,7 +7,7 @@ import Footer from '../components/Footer'
 import landingConfig from '../config/landingConfig'
 
 function Home() {
-  const [assinaturas, setAssinaturas] = useState(0)
+  const [assinaturas, setAssinaturas] = useState(400)
   const [target, setTarget] = useState(null)
   const [showPrivacy, setShowPrivacy] = useState(false)
 
@@ -25,9 +25,10 @@ function Home() {
             done = true
             return target
           }
-          return prev + Math.ceil((target - prev) / 25)
+          const incremento = Math.max(4, Math.round((target - prev) * 0.18))
+          return Math.min(prev + incremento, target)
         }
-        contador += 0.03
+        contador += 0.5
         return Math.floor(contador)
       })
 
